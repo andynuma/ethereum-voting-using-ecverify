@@ -7,6 +7,8 @@
 1. `eth.accounts`でアカウントを確認  
 1. `personal.unlockAccount(eth.accounts[0])`でロックを解除  
 
+ganacheでも良い
+
 # my-evoting
 まだ，remixでの動作しかできない状況
 
