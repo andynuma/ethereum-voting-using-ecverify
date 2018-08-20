@@ -1,11 +1,11 @@
 # gethの起動
-`geth --datadir /Users/andy/eth_private_net init /User/andy/eth_private_net/myGenesis.json`
+`geth --datadir /Users/andy/eth_private_net init /User/andy/eth_private_net/myGenesis.json`  
 
-`geth --networkid "10" --nodiscover --datadir /Users/andy/eth_private_net --rpc --rpcaddr "localhost" --rpcport "8545" --rpccorsdomain "*" --rpcapi "eth,net,web3,personal" --targetgaslimit "20000000" console 2>> /Users/andy/eth_private_net/error.log`
+`geth --networkid "10" --nodiscover --datadir /Users/andy/eth_private_net --rpc --rpcaddr "localhost" --rpcport "8545" --rpccorsdomain "*" --rpcapi "eth,net,web3,personal" --targetgaslimit "20000000" console 2>> /Users/andy/eth_private_net/error.log`  
 
-`personal.newAccount("password")`で新しいアカウントを作成.
-`eth.accounts`でアカウントを確認
-`personal.unlockAccount(eth.accounts[0])`でロックを解除
+`personal.newAccount("password")`で新しいアカウントを作成.  
+`eth.accounts`でアカウントを確認  
+`personal.unlockAccount(eth.accounts[0])`でロックを解除  
 
 # my-evoting
 まだ，remixでの動作しかできない状況
