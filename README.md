@@ -1,4 +1,4 @@
-# gethの起動
+## gethの起動
 1. `geth --datadir /Users/andy/eth_private_net init /User/andy/eth_private_net/myGenesis.json`  
 
 1. `geth --networkid "10" --nodiscover --datadir /Users/andy/eth_private_net --rpc --rpcaddr "localhost" --rpcport "8545" --rpccorsdomain "*" --rpcapi "eth,net,web3,personal" --targetgaslimit "20000000" console 2>> /Users/andy/eth_private_net/error.log`  
@@ -6,6 +6,10 @@
 1. `personal.newAccount("password")`で新しいアカウントを作成.  
 1. `eth.accounts`でアカウントを確認  
 1. `personal.unlockAccount(eth.accounts[0])`でロックを解除  
+
+eth.accounts[0]がcoinbaseのアカウントで，それをオーナーとする.  
+eth.accounts[2]:投票者
+eth.accounts[3]:監査者
 
 ganacheでも良い
 
