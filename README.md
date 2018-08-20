@@ -4,9 +4,13 @@
 ## 動作説明
 
 - 運営側で投票者のアドレス(voteAddr)を設定
+  - setVoterAddr(index,voterAddr)
+  - ~~~ voterAddrs[index]= _voterAddr ~~~
 
 - 票を作成
   - createVoteは投票者として設定されたアドレスしか実行できない.
+  - 投票内容はhashしたものを送る．内容は1などの単純なものではなく，ランダムな内容にする必要がある（ハッシュで特定されるので）,つまり問題点はhashに依存するということ.
+  
   - 構造体Voteに内容を格納
     - Voteはidで管理する
   - 引数は_hashIdとして投票内容そのものは渡さない
