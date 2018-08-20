@@ -7,7 +7,7 @@
 1. `eth.accounts`でアカウントを確認  
 1. `personal.unlockAccount(eth.accounts[0])`でロックを解除  
 
-`eth.accounts[0]`がcoinbaseのアカウントで，それをオーナーとする.  
+`eth.accounts[0]`:運営   
 `eth.accounts[2]`:投票者  
 `eth.accounts[3]`:監査者  
 
