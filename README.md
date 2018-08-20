@@ -1,3 +1,6 @@
+# my-evoting
+まだ，remixでの動作しかできない状況
+
 ## gethの起動
 1. `geth --datadir /Users/andy/eth_private_net init /User/andy/eth_private_net/myGenesis.json`  
 
@@ -19,8 +22,6 @@
 `truffle(develop)> web3.sha3("hashするid")` 例えば`web3.sha3("1")`  
 `truffle(develop)> web3.eth.sign("運営or監査者のアドレス",hash)`  
 
-# my-evoting
-まだ，remixでの動作しかできない状況
 
 ## 動作説明
 
