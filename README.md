@@ -11,7 +11,7 @@
 `eth.accounts[2]`:投票者  
 `eth.accounts[3]`:監査者  
 
-ganacheでも良い
+ポート8545でremixと接続  
 
 # my-evoting
 まだ，remixでの動作しかできない状況
