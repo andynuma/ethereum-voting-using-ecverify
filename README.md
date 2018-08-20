@@ -16,7 +16,7 @@
 今はVMでやる
 
 ## truffleの設定
-`truffle(develop)> web3.sha3("hashするid")`例えば`web3.sha3("1")`  
+`truffle(develop)> web3.sha3("hashするid")` 例えば`web3.sha3("1")`  
 `truffle(develop)> web3.eth.sign("運営or監査者のアドレス",hash)`  
 
 # my-evoting
