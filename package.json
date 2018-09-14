@@ -1,0 +1,31 @@
+{
+  "name": "evoting_beta",
+  "version": "1.0.0",
+  "description": "まだ，remixでの動作しかできない状況",
+  "main": "truffle-config.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "dev": "npm run artifacts && next client",
+    "artifacts": "cp -r ./build/contracts/ ./client/web3/artifacts",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/andynuma/my-evoting.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/andynuma/my-evoting/issues"
+  },
+  "homepage": "https://github.com/andynuma/my-evoting#readme",
+  "dependencies": {
+    "next": "^6.1.1",
+    "react": "^16.4.2",
+    "react-dom": "^16.4.2",
+    "truffle-contract": "^3.0.6",
+    "web3": "^1.0.0-beta.35"
+  }
+}

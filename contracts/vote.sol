@@ -2,7 +2,7 @@ pragma solidity ^0.4.19;
 import "./MyVerify.sol";
 import "./Owned.sol";
 
-contract vote is MyVerify {
+contract Vote is MyVerify {
 
     //mapping (uint => uint) voteId;
     mapping(uint => address) public voteToOwner;
@@ -13,10 +13,11 @@ contract vote is MyVerify {
     mapping(uint => uint) candidateVoteCounts;
     mapping(bytes32 => uint) firstSend;
 
-    uint testId;
+    uint testId=1;
     
     address voterAddr;
     address organizerAddr;
+    address inspectorAddr;
     
     //vote 
     struct Vote{
@@ -24,6 +25,8 @@ contract vote is MyVerify {
         address voterAddr;
         bytes signByOrganizer;
         bytes signByInspector;
+        uint publickey1;
+        uint publickey2;
     }
     
     Vote[] public votes;
@@ -32,7 +35,7 @@ contract vote is MyVerify {
         require(msg.sender == voterAddr);
         _;
     }
-    
+
     modifier onlyInspector{
         require(msg.sender == inspectorAddr);
         _;
@@ -43,14 +46,24 @@ contract vote is MyVerify {
         voterAddr = _voterAddr;
         //voterAddrs[_index] = _voterAddr;
     }
+    //test//////////////////////
+    function checkVoterAddr() public returns(address){
+        return voterAddr;
+    }
+
+    function getOwner() public returns (address){
+        return ownerAddr;
+    }
+    
     
     function testVoter(uint count) public onlyVoter returns(uint){
         return count;
     }
-    
+    //test//////////////////////
+
     function createVote(bytes32 _hashedVote) public onlyVoter returns(uint){
         //票の初期化
-        uint id = votes.push(Vote(_hashedVote,msg.sender,"0x0","0x0"))-1;
+        uint id = votes.push(Vote(_hashedVote,msg.sender,"0x0","0x0",0,0))-1;
         //票と投票者の紐付け
         voteToOwner[id] = msg.sender;
         return id;
@@ -66,6 +79,12 @@ contract vote is MyVerify {
         myVote.signByOrganizer = _signature;
         //これでorganzierのアドレスが返して，それをVoteに入れる
         /////公開鍵を投票者に送信
+        //RSAで実装
+        //仮の公開鍵として(7,11)を設定しておく
+        myVote.publickey1 = 7;
+        myVote.publickey2 = 11;
+
+        //ECCでの実装はまだ
         
     }
     
@@ -79,7 +98,7 @@ contract vote is MyVerify {
         
         Vote storage myVote = votes[_voteId];
         //運営の署名の検証
-        require(organizerAddr == ecverify(myVote.hashedVote,myVote.signByOrganizer) );
+        require(organizerAddr == ecverify(myVote.hashedVote,myVote.signByOrganizer));
         //投票者の確認
         //未実装
         //署名
@@ -91,7 +110,7 @@ contract vote is MyVerify {
         Vote storage myVote = votes[_voteId];
         require(inspectorAddr == ecverify(myVote.hashedVote, myVote.signByInspector));
         //ここから公開鍵で暗号化された投票内容（hashではない）を復号
-        //hashedVoteを復号する.
+        //hashedVoteを復号する.と思ったけど，復号はクライアント側でやってもらう事にする.
         //candidateVoteCounts[_candidateId]++;
     }
 
@@ -105,7 +124,7 @@ contract vote is MyVerify {
     function test(uint _testId) public {
         testId = _testId;
     }
-
+    
     function testreturn() public returns(uint){
         return testId;
     }

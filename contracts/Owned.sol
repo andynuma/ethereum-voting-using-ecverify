@@ -2,20 +2,16 @@ pragma solidity ^0.4.19;
 
 contract Owned {
     address public ownerAddr;
-    address public voterAddr;
-    address public inspectorAddr;
 
-    //ownerAddrを設定
-    function Owned() internal {
-        ownerAddr = msg.sender;
-    }
-    
-    
     modifier onlyOwner(){
         require(msg.sender == ownerAddr);
         _;
     }
 
+    //ownerAddrを設定
+    constructor() public{
+        ownerAddr = msg.sender;
+    }
     // modifier onlyVoter(){
     //     require(msg.sender == voterAddr);
     //     _;
