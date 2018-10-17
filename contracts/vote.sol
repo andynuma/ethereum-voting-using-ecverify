@@ -18,6 +18,10 @@ contract Vote is MyVerify {
     address voterAddr;
     address organizerAddr;
     address inspectorAddr;
+
+    constructor(){
+        organizerAddr = msg.sender;
+    }
     
     //vote 
     struct Vote{
@@ -87,6 +91,11 @@ contract Vote is MyVerify {
             votes[_voteId].publickey2
         );
     }
+
+    //test
+    function getOrganizerAddr() public returns(address){
+        return organizerAddr;
+    } 
     //set voter address
     function setVoterAddr(address _voterAddr) public onlyOwner{
         voterAddr = _voterAddr;
@@ -129,7 +138,7 @@ contract Vote is MyVerify {
         //_signatureに渡すこと
         
         //Vote storage myVote = votes[_voteId];
-        //運営の署名の検証
+        //TODO:運営の署名の検証
         require(organizerAddr == ecverify(votes[_voteId].hashedVote,votes[_voteId].signByOrganizer));
         //投票者の確認
         //未実装

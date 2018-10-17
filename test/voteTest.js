@@ -51,8 +51,10 @@ contract("Vote",async(accounts) => {
         let account_one = accounts[0]
         let account_two = accounts[1]
 
+        const hash = await web3.sha3("0x11")
+
         await vote.setVoterAddr(account_two,{from:account_one});
-        const tx = await vote.createVote("0x011",{from:account_two});
+        const tx = await vote.createVote(hash,{from:account_two});
         assert.isOk(tx)
  
     })
@@ -66,10 +68,13 @@ contract("Vote",async(accounts) => {
 
         let err = null
 
+        const hash = await web3.sha3("0x11")
+
+
         await vote.setVoterAddr(account_two,{from:account_one});
         
         try{
-            await vote.createVote("0x011",{from:account_three});
+            await vote.createVote(hash,{from:account_three});
         }catch(error){
             err = error
         }
@@ -86,7 +91,7 @@ contract("Vote",async(accounts) => {
         //const [hashedVote,voterAddr,signByOrganizer] = testVote
 
         //署名作成(sign)
-        const hash = web3.sha3("0x1111")
+        const hash = web3.sha3("0x11")
         const sig = web3.eth.sign(account_one,hash)
 
         const tx = await vote.signByOrganizer(0,sig)
@@ -112,79 +117,121 @@ contract("Vote",async(accounts) => {
 
         const vote = await Vote.deployed()
         const verifyInstance = await MyVerifiy.deployed()
+        const VoteInstance = await vote.votes(0)
+
 
         //アドレス設定
+        //const organizer = await vote.address // organizer address is contract address
         const organizer = await accounts[0]
+        console.log("organizerAddr:",organizer)
         const voter = await accounts[1]
         const inspector = await accounts[2]
 
         console.log("organizerAddr:",organizer)
+        console.log("voterAddr:",voter)
+
+        // const test = await vote.organizerAddr;
+        // console.log("test: ",test)
+
         //const temp = '0xe72e94122cb83dfc625371b5e9bbf2acfb13235f';
         // console.log(voter)
         // console.log(inspector)
 
 
-        //票の作成
+        //set address for voter
         await vote.setVoterAddr(voter,{from:organizer});
         
-        // make Vote
-        //hashVote = web3.sha3("0x110000...")
-        const hash = await web3.sha3("0x1100000000000000000000000000000000000000000000000000000000000000")
+        // make hash
+        //const hash = await web3.sha3("0x1100000000000000000000000000000000000000000000000000000000000000")
+        const hash = await web3.sha3("0x11")
+        console.log("hash:",hash)
+
+
+        //make vote
         const tx = await vote.createVote(hash,{from:voter});
+        console.log("(after createVote) VoteInstance :\n",VoteInstance)
         assert.isOk(tx)
+        // console.log("hash:",hash)
+        //console.log("(after createVote)VoteStructInstance:",VoteInstance)
+        //console.log("encoded hash", web3.toAscii(hash))
+        //TODO: hashの値と違う値がVote Structに代入されていて，しかもそれは0x11...が代入されている
 
          //organizerの署名の作成
         //const hash = await web3.sha3("0x1100000000000000000000000000000000000000000000000000000000000000")
-        const sig = await web3.eth.sign(organizer,hash)
-        console.log("organizer's sig:",sig)
+        const organizer_sig = await web3.eth.sign(organizer,hash)
+        console.log("Organizer's sig:",organizer_sig)
 
-        const return_address = await verifyInstance.ecverify(hash,sig)
-        console.log("return_address:", return_address)
+        const voteId = await 0
+
+
+        //TODO: signByOrganizerの値がいつの間にか変化している...console.logで表示させた内容と全然違う値がVote Structに入っている
+        const tt = await vote.signByOrganizer(voteId,organizer_sig,{from:organizer})
+        assert.isOk(tt)
+
+
+        const return_address = await verifyInstance.ecverify(hash,organizer_sig)
+        console.log("return_address_from_sig_and_hash:", return_address)
         assert.equal(return_address, organizer,"should match two accounts")
+
 
         //監査者のアドレスを設定
         const t = await vote.setInspectorAddr(inspector,{from:organizer})
-        //assert.isOk(t)
+        assert.isOk(t)
 
-        const voterId = 0
+        // const voterId = await 0
 
         //organizerの署名を作成
         //testVoteにhasedVoteとsignByorganizerを入れたいんだけど，入ってない？
-        const VoteInstance = await vote.votes(0)
         //const organizerSignature = VoteInstance[2]
         //TODO: voterIdで呼び出すVote Structはコントラクト内ではhashVoteとして"0x11"を入れている，でも実際はweb3.sha3
+
         //で値を変更しているので，hashを初期値として与えた
         //const vote.votes
         //console.log(VoteInstance[2])
         //console.log(organizerSignature)
-        const tt = await vote.signByOrganizer(voterId,sig,{from:organizer})
-        console.log(VoteInstance)
 
-        assert.isOk(tt)
+        //TODO: signByOrganizerの値がいつの間にか変化している...console.logで表示させた内容と全然違う値がVote Structに入っている
+        const tx3 = await vote.signByOrganizer(voteId,organizer_sig,{from:organizer})
+        assert.isOk(tx3)
 
-        //ほんとはcreateVoteすれば自動で値が入るはずなんですけど
-        // testVote.hashedVote = "0x1100000000000000000000000000000000000000000000000000000000000000"
-        // testVote.signByOrganizer =  sig
-        //console.dir(testVote)
-        //console.log("testVote.signByOrganizer :  " , testVote.signByOrganizer)
+        // 
+        const contractAddr = await vote.address
+        console.log("contract address:",contractAddr)
+        //console.log("Vote Struct Instance(before sign by inspector):\n",VoteInstance)
+        // const newSig = web3.toUtf8(organizer_sig)
+        // console.log("newSig:",newSig)
+
 
         //監査者の署名
         const inspector_sig = await web3.eth.sign(inspector,hash)
         console.log("inspector's signature:",inspector_sig)
         const return_address_inspector = await verifyInstance.ecverify(hash,inspector_sig)
         assert.equal(return_address_inspector, inspector,"should match two accounts")
+
+        // console.log("0:",VoteInstance[0])
+        // console.log("2:",VoteInstance[2])
+
+        const return_organizerAddr = await verifyInstance.ecverify(VoteInstance[0],VoteInstance[2])
+        console.log("return_organizerAddr_from_VoteStruct:",return_organizerAddr)
+        assert.equal(return_organizerAddr, organizer,"should match two accounts")
         
-        console.log("0:",VoteInstance[0])
-        console.log("2:",VoteInstance[2])
 
-        const return_organizerAddr = verifyInstance.ecverify(VoteInstance[0],VoteInstance[2])
-        console.log(return_organizerAddr)
+        // const contractOrganizerAddr = await vote.getOrganizerAddr();
+        // console.log("getOrganizrAddr",contractOrganizerAddr)
 
-        //TODO:requireでエラー(organizerの署名が機能していない)
-        //const txt = await vote.signByInspector(0,inspector_sig,{from:inspector}) 
+        //TODO:organizerのアドレスをVote.solのアドレスを設定しないといけない
+
+
+        //TODO:requireでエラー(organizerの署名が機能していない) => Vote structには違う値が代入されている => 修正した
+        const txt = await vote.signByInspector(0,inspector_sig,{from:inspector}) 
+        
+        
+        //TODO: 構造体に記入されているbytes or bytes32で　jsファイルと同じ値で格納されている値が１つもない
         //console.log(txt)
-        //assert.isOk(txt)
- 
+        assert.isOk(txt)
+
+        const testInstance = await vote.votes(0)
+        console.log("votes[0]\n",testInstance) 
     })
 
     // it("can get user", async () => {
