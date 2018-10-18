@@ -1,5 +1,5 @@
 # my-evoting
-まだ，remixでの動作しかできない状況
+https://scrapbox.io/evoting/
 
 ## gethの起動
 1. `geth --datadir /Users/andy/eth_private_net init /User/andy/eth_private_net/myGenesis.json`  
