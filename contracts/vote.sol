@@ -6,13 +6,11 @@ contract Vote is MyVerify {
 
     //mapping (uint => uint) voteId;
     mapping(uint => address) public voteToOwner;
-    mapping(address => uint) ownerToVote;
-    mapping(address => uint) ownerVoteCount;
-    mapping(address => bytes32) hashedIdCollections;
-    mapping (uint => address) candidateToAddress;
-    mapping(uint => uint) candidateVoteCounts;
-    mapping(bytes32 => uint) firstSend;
-
+    mapping(address => uint) public voterVoteCount;
+    mapping(address => bytes) resultOfHashedVote;
+    mapping(address => uint) public addressToResult;
+    
+    
     uint testId = 1;
     
     address voterAddr;
@@ -96,6 +94,7 @@ contract Vote is MyVerify {
     function getOrganizerAddr() public returns(address){
         return organizerAddr;
     } 
+
     //set voter address
     function setVoterAddr(address _voterAddr) public onlyOwner{
         voterAddr = _voterAddr;
@@ -106,6 +105,8 @@ contract Vote is MyVerify {
         uint id = votes.push(Vote(_hashedVote,msg.sender,"0x0","0x0",0,0))-1;
         //票と投票者の紐付け
         voteToOwner[id] = msg.sender;
+
+        voterVoteCount[msg.sender] += 1;
         return id;
     }
     
@@ -117,7 +118,6 @@ contract Vote is MyVerify {
         
         votes[_voteId].signByOrganizer = _signature;
 
-        //myVote.signByOrganizer = _signature;
         //これでorganzierのアドレスが返して，それをVoteに入れる
         /////公開鍵を投票者に送信
         //RSAで実装
@@ -137,31 +137,28 @@ contract Vote is MyVerify {
         //web3.eth.sign(account, hash)のaccountをOrganaizerのアドレスで実行して
         //_signatureに渡すこと
         
-        //Vote storage myVote = votes[_voteId];
-        //TODO:運営の署名の検証
         require(organizerAddr == ecverify(votes[_voteId].hashedVote,votes[_voteId].signByOrganizer));
-        //投票者の確認
-        //未実装
-        //署名
-        //myVote.signByInspector = _signature;
         votes[_voteId].signByInspector = _signature;
     }
     
-    function voteToCandidate(uint _voteId) public onlyVoter{
+    function sendToOrganizer(bytes _pkV, uint _voteId) public onlyVoter{
         //Vote.organizerSigの内容をecverifyで確認する
-        Vote storage myVote = votes[_voteId];
-        require(inspectorAddr == ecverify(myVote.hashedVote, myVote.signByInspector));
+       //Vote storage myVote = votes[_voteId];
 
-        //ここから公開鍵で暗号化された投票内容（hashではない）を復号
-        //hashedVoteを復号する.と思ったけど，復号はクライアント側でやってもらう事にする.
-        //candidateVoteCounts[_candidateId]++;
+        require(organizerAddr == ecverify(votes[_voteId].hashedVote,votes[_voteId].signByOrganizer));
+        require(inspectorAddr == ecverify(votes[_voteId].hashedVote, votes[_voteId].signByInspector));
+
+        resultOfHashedVote[msg.sender] = _pkV;
     }
 
-
-    //count votes
-    function getVote(uint _candidateId) public view onlyOwner returns(uint){
-        return candidateVoteCounts[_candidateId];
+    // organizer send address and candidateId 
+    function voteToCandidate(address _address, uint _candidateId) public onlyOwner{
+        addressToResult[_address] = _candidateId;
     }
 
+    // everyone can view result
+    function viewResult(address _voterAddr) public returns(uint){
+        return addressToResult[_voterAddr];
+    }
 
 }
