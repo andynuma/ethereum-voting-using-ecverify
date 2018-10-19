@@ -157,24 +157,19 @@ contract("Vote",(accounts) => {
         assert.isOk(tx4)
 
         //vote
-        const candidateId = await 1;
+        const candidateId = await 3;
         const tx5 = await contractInstance.voteToCandidate(voter,candidateId,{from:organizer})
         assert.isOk(tx5)
 
         //view result
-        //const result = await contractInstance.addressToResult(voter)
-        //const resulttest = await result.toNumber()
-        //console.log(resulttest)
-        const tx6 = await contractInstance.viewResult(voter,{from:organizer}).call()
-        console.log(tx6)
-        //TODO: assert.equalでの確認
-        assert.isOk(tx6)
-
-        // const test = await contractInstance.votes(voteId)
-        // console.log(test)
+        const tx6 = await contractInstance.viewResult(voter)
+        const result = tx6.toNumber()
+        //console.log(result)
+        assert.equal(result,3,"should match two value .")
     })
 
     it("anyone can count vote",async() => {
+
         const voteId = await 0
 
         // create vote
@@ -196,23 +191,15 @@ contract("Vote",(accounts) => {
         assert.isOk(tx4)
 
         //vote
-        const candidateId = await 1;
+        const candidateId = await 1; 
         const tx5 = await contractInstance.voteToCandidate(voter,candidateId,{from:organizer})
         assert.isOk(tx5)
 
         //view result
-        //const result = await contractInstance.addressToResult(voter)
-        //const resulttest = await result.toNumber()
-        //console.log(resulttest)
-        const tx6 = await contractInstance.viewResult(voter,{from:voter}) // from : voter
-        console.log(tx6)
-        //TODO: assert.equalでの確認,call()で呼べないというか引数を持つ値はどうやって見るのか
-        assert.isOk(tx6)
+        const temp = await contractInstance.viewResult(voter,{from:accounts[4]}) // from : voter
+        const result = await temp.toNumber()
+        assert.equal(result,1,"should match two value .")
 
-        // const test = await contractInstance.votes(voteId)
-        // console.log(test)
-        // const test = await contractInstance.votes(voteId)
-        // console.log(test)
     })
 
 })

@@ -10,9 +10,6 @@ contract Vote is MyVerify {
     mapping(address => bytes) resultOfHashedVote;
     mapping(address => uint) public addressToResult;
     
-    
-    uint testId = 1;
-    
     address voterAddr;
     address organizerAddr;
     address inspectorAddr;
@@ -45,61 +42,13 @@ contract Vote is MyVerify {
         _;
     }
     
-    ///test 
-    function test(uint _testId) public {
-        testId = _testId;
-    }
-
-    //test
-    function testreturn() public returns(uint){
-        return testId;
-    }
-    //test
-    function setInspectorAddr(address _inspectorAddr) public onlyOwner{
-        inspectorAddr = _inspectorAddr;
-    }
-    //test///
-    function checkVoterAddr() public returns(address){
-        return voterAddr;
-    }
-
-    //test
-    function getOwner() public returns (address){
-        return ownerAddr;
-    }
-    
-    //test
-    function testVoter(uint count) public onlyVoter returns(uint){
-        return count;
-    }
-
-    //test 
-    function getVoteSignByOrganizer(uint _voteId) public returns(bytes){
-        return votes[_voteId].signByOrganizer;
-    }
-
-    //test 
-    function getVoteFromId(uint _voteId) public returns(bytes32,address,bytes,bytes,uint,uint){
-        return (
-            votes[_voteId].hashedVote,
-            votes[_voteId].voterAddr,
-            votes[_voteId].signByOrganizer,
-            votes[_voteId].signByInspector,
-            votes[_voteId].publickey1,
-            votes[_voteId].publickey2
-        );
-    }
-
-    //test
-    function getOrganizerAddr() public returns(address){
-        return organizerAddr;
-    } 
-
     //set voter address
     function setVoterAddr(address _voterAddr) public onlyOwner{
         voterAddr = _voterAddr;
         //voterAddrs[_index] = _voterAddr;
     }
+
+
     function createVote(bytes32 _hashedVote) public onlyVoter returns(uint){
         //票の初期化
         uint id = votes.push(Vote(_hashedVote,msg.sender,"0x0","0x0",0,0))-1;
@@ -127,6 +76,11 @@ contract Vote is MyVerify {
 
         //ECCでの実装はまだ
         
+    }
+
+    //set inspector address
+    function setInspectorAddr(address _inspectorAddr) public onlyOwner{
+        inspectorAddr = _inspectorAddr;
     }
     
     //signature by Inspector
@@ -157,7 +111,7 @@ contract Vote is MyVerify {
     }
 
     // everyone can view result
-    function viewResult(address _voterAddr) public returns(uint){
+    function viewResult(address _voterAddr) public view returns(uint){
         return addressToResult[_voterAddr];
     }
 
