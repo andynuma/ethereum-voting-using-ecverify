@@ -14,9 +14,7 @@ https://scrapbox.io/evoting/
 `eth.accounts[2]`:投票者  
 `eth.accounts[3]`:監査者  
 
-ポート8545でremixと接続  
-
-結局remixからできないので今はVMでやる（下）
+ポート8545でremixと接続 
 
 ## truffleの設定
 `truffle(develop)> web3.sha3("hashするid")` 例えば`web3.sha3("1")`  
@@ -69,6 +67,5 @@ https://scrapbox.io/evoting/
   - 投票内容は,getVote（候補者id）で見える．
     
     
-##  動作確認コマンド
-    
+10/19:test was done    
     
