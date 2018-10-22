@@ -56,6 +56,7 @@ contract Vote is MyVerify {
         voteToOwner[id] = msg.sender;
 
         voterVoteCount[msg.sender] += 1;
+
         return id;
     }
     
@@ -104,17 +105,13 @@ contract Vote is MyVerify {
         require(inspectorAddr == ecverify(votes[_voteId].hashedVote, votes[_voteId].signByInspector));
 
         // check vote count
-        //require(voterVoteCount[msg.sender] != 1);
+        require(voterVoteCount[msg.sender] == 1);
 
         resultOfHashedVote[msg.sender] = _pkV;
     }
 
     // organizer send address and candidateId 
     function voteToCandidate(address _address, uint _candidateId) public onlyOwner{
-
-        // check vote count
-        require(voterVoteCount[msg.sender] != 1);
-
         addressToResult[_address] = _candidateId;
     }
 
