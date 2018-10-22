@@ -7,14 +7,14 @@ contract Vote is MyVerify {
     //mapping (uint => uint) voteId;
     mapping(uint => address) public voteToOwner;
     mapping(address => uint) public voterVoteCount;
-    mapping(address => bytes) resultOfHashedVote;
+    mapping(address => bytes) public resultOfHashedVote;
     mapping(address => uint) public addressToResult;
     
     address voterAddr;
     address organizerAddr;
     address inspectorAddr;
 
-    constructor(){
+    constructor()  {
         organizerAddr = msg.sender;
     }
     
@@ -99,14 +99,22 @@ contract Vote is MyVerify {
         //Vote.organizerSigの内容をecverifyで確認する
        //Vote storage myVote = votes[_voteId];
 
+        // check sign
         require(organizerAddr == ecverify(votes[_voteId].hashedVote,votes[_voteId].signByOrganizer));
         require(inspectorAddr == ecverify(votes[_voteId].hashedVote, votes[_voteId].signByInspector));
+
+        // check vote count
+        //require(voterVoteCount[msg.sender] != 1);
 
         resultOfHashedVote[msg.sender] = _pkV;
     }
 
     // organizer send address and candidateId 
     function voteToCandidate(address _address, uint _candidateId) public onlyOwner{
+
+        // check vote count
+        require(voterVoteCount[msg.sender] != 1);
+
         addressToResult[_address] = _candidateId;
     }
 

@@ -63,11 +63,11 @@ contract("Vote",(accounts) => {
         const tx4 = await contractInstance.signByInspector(0,inspector_sig,{from:inspector}) 
         assert.isOk(tx4)
 
-        // send vote to organizer
-        const mypkv = "0x11"
-
+        const mypkv = "0x11"  
+        const otherAccount = accounts[4] 
+        
         try{
-            await contractInstance.sendToOrganizer(mypkv,0,{from:voter})
+            await contractInstance.sendToOrganizer(mypkv,0,{from:otherAccount})
             assert.ok(false,"The contract should reject this case")
         }catch(error){
             assert.ok(true,"The contract is not allowing external users to send vote ")
