@@ -32,9 +32,6 @@ contract("Vote",(accounts) => {
         const tx4 = await contractInstance.signByInspector(0,inspector_sig,{from:inspector}) 
         assert.isOk(tx4)
 
-        // const test = await contractInstance.votes(voteId)
-        // console.log(test)
-
         // send vote to organizer
         const mypkv = "0x11"
         const tx5 = contractInstance.sendToOrganizer(mypkv,0,{from:voter})
@@ -100,8 +97,6 @@ contract("Vote",(accounts) => {
         const tx5 = await contractInstance.voteToCandidate(voter,candidateId,{from:organizer})
         assert.isOk(tx5)
 
-        // const test = await contractInstance.votes(voteId)
-        // console.log(test)
     })
 
     it("only organizer set result of voting",async() => {
@@ -131,8 +126,6 @@ contract("Vote",(accounts) => {
         }catch(error){
             assert.ok(true,"The contract is not allowing external users to send vote ")
         }     
-        // const test = await contractInstance.votes(voteId)
-        // console.log(test)
     })
 
     it("can count vote",async() => {
