@@ -10,7 +10,6 @@ contract Vote is MyVerify {
     mapping(address => bytes) public resultOfHashedVote;
     mapping(address => uint) public addressToResult;
     
-    address voterAddr;
     address organizerAddr;
     address inspectorAddr;
 
@@ -33,11 +32,6 @@ contract Vote is MyVerify {
     address[] public voters;
 
     mapping(uint => Vote) public ballots;
-
-    modifier onlyVoter{
-        require(msg.sender == voterAddr);
-        _;
-    }
 
     modifier onlyInspector{
         require(msg.sender == inspectorAddr);
