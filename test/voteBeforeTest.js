@@ -4,15 +4,15 @@ const MyVerifiy = artifacts.require("../contracts/MyVerify.sol")
 contract("Vote",async(accounts) => {    
 
     it("set voter address from Owner address", async() =>{
-
         //account_one is Owner address
         let account_one = accounts[0]
         let account_two = accounts[1]
         //console.log(account_two)
         const vote = await Vote.deployed()
         const tx = await vote.setVoterAddr(account_two,{from:account_one});
+        // console.log(vote.setVoterAddr.estimateGas(account_two,{from:account_one}))
+        console.log("set voter address:", web3.eth.estimateGas(tx),"wei")
         assert.isOk(tx)
-
     })
 
     it("set voter address from incorrect address", async() =>{
@@ -43,6 +43,8 @@ contract("Vote",async(accounts) => {
 
         await vote.setVoterAddr(account_two,{from:account_one});
         const tx = await vote.createVote(hash,{from:account_two});
+        console.log("create ballot:", web3.eth.estimateGas(tx),"wei")
+
         assert.isOk(tx)
  
     })
@@ -82,7 +84,7 @@ contract("Vote",async(accounts) => {
         const sig = web3.eth.sign(account_one,hash)
 
         const tx = await vote.signByOrganizer(0,sig)
-
+        console.log("sign by organizer:", web3.eth.estimateGas(tx),"wei")
         assert.isOk(tx)
  
     })
@@ -95,6 +97,8 @@ contract("Vote",async(accounts) => {
         const account_two = accounts[1]
         
         const tx = vote.setInspectorAddr(account_two)
+        console.log("set address of inspector:", web3.eth.estimateGas(tx),"wei")
+
         assert.isOk(tx)
 
     })
@@ -148,6 +152,10 @@ contract("Vote",async(accounts) => {
         assert.equal(return_organizerAddr, organizer,"should match two accounts")
 
         const txt = await vote.signByInspector(0,inspector_sig,{from:inspector}) 
+
+
+        console.log("sign by inspector:", web3.eth.estimateGas(txt),"wei")
+
         
         assert.isOk(txt)
 

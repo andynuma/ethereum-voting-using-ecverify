@@ -30,6 +30,8 @@ contract Vote is MyVerify {
     
     Vote[] public votes;
 
+    address[] public voters;
+
     mapping(uint => Vote) public ballots;
 
     modifier onlyVoter{
@@ -41,15 +43,25 @@ contract Vote is MyVerify {
         require(msg.sender == inspectorAddr);
         _;
     }
+
+    function checkVoterAddr(address _voterAddr) public returns(bool){
+        for(uint i = 0; i < voters.length; i++){
+            if(voters[i] == _voterAddr){
+                return true;
+            }
+        }
+        return false;
+    }
     
     //set voter address
     function setVoterAddr(address _voterAddr) public onlyOwner{
-        voterAddr = _voterAddr;
-        //voterAddrs[_index] = _voterAddr;
+        voters.push(_voterAddr);
     }
 
 
-    function createVote(bytes32 _hashedVote) public onlyVoter returns(uint){
+    function createVote(bytes32 _hashedVote) public returns(uint){
+
+        require(checkVoterAddr(msg.sender) == true);
         //票の初期化
         uint id = votes.push(Vote(_hashedVote,msg.sender,"0x0","0x0",0,0))-1;
         //票と投票者の紐付け
@@ -96,7 +108,10 @@ contract Vote is MyVerify {
         votes[_voteId].signByInspector = _signature;
     }
     
-    function sendToOrganizer(bytes _pkV, uint _voteId) public onlyVoter{
+    function sendToOrganizer(bytes _pkV, uint _voteId) public {
+
+        require(checkVoterAddr(msg.sender) == true);
+
         //Vote.organizerSigの内容をecverifyで確認する
        //Vote storage myVote = votes[_voteId];
 

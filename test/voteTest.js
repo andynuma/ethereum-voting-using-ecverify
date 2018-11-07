@@ -13,7 +13,6 @@ contract("Vote",(accounts) => {
     it("voter can send vote to organizer",async() => {
 
         const voteId = await 0
-
         // create vote
         const hash = await web3.sha3("0x11")
         await contractInstance.setVoterAddr(voter,{from:organizer});
@@ -35,6 +34,7 @@ contract("Vote",(accounts) => {
         // send vote to organizer
         const mypkv = "0x11"
         const tx5 = contractInstance.sendToOrganizer(mypkv,0,{from:voter})
+        console.log("send vote to organizer:", web3.eth.estimateGas(tx5),"wei")
         assert.isOk(tx5)
        
     })
@@ -95,6 +95,8 @@ contract("Vote",(accounts) => {
         const candidateId = 1;
 
         const tx5 = await contractInstance.voteToCandidate(voter,candidateId,{from:organizer})
+        console.log("set result:", web3.eth.estimateGas(tx5),"wei")
+
         assert.isOk(tx5)
 
     })
@@ -158,6 +160,8 @@ contract("Vote",(accounts) => {
         const tx6 = await contractInstance.viewResult(voter)
         const result = tx6.toNumber()
         //console.log(result)
+        //console.log("view result:", web3.eth.estimateGas(tx6),"wei")
+
         assert.equal(result,3,"should match two value .")
     })
 
@@ -191,8 +195,9 @@ contract("Vote",(accounts) => {
         //view result
         const temp = await contractInstance.viewResult(voter,{from:accounts[4]}) // from : voter
         const result = await temp.toNumber()
-        assert.equal(result,1,"should match two value .")
 
+        assert.equal(result,1,"should match two value .")
+        
     })
 
 })
