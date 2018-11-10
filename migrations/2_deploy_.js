@@ -6,7 +6,7 @@ module.exports = (deployer,accounts) =>{
     deployer.deploy(Vote);
     deployer.deploy(MyVerify);
     //deployer.deploy(Owned);
-    gas: 2000000
+    //gas: 2000000
 };
 
 // module.exports = function(deployer,accounts) {   

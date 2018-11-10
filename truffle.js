@@ -1,32 +1,27 @@
 var HDWalletProvider = require("truffle-hdwallet-provider");
-var mnemonic = "until future purse mobile erosion double dumb obtain caught slice say damage";
+var mnemonic = "YOUR mnemonic is here";
 
 module.exports = {
-    networks: {
-      ropsten: {
-        provider: function() {
-          return new HDWalletProvider(
-            mnemonic,
-            "https://ropsten.infura.io/v3/b911df35ce14433bb428a5fce838cbf6"
-          );
-        },
-        network_id: 3,
-        gas: 5000000
-        
-      }   
-    }
-  };
+  networks: {
 
-
-// module.exports = {
-//     networks: {
-//         development: {
-//         host: "127.0.0.1",
-//         port: 7545,
-//         network_id: "*" // Match any network id
-//         //gas:290000,
-//         //solc: { optimizer: { enabled: true, runs: 200 } }
-//         //gas:4712388
-//     }
-//   }
-// };
+        development: {
+        host: "127.0.0.1",
+        port: 7545,
+        network_id: "*" // Match any network id
+        //gas:290000,
+        //solc: { optimizer: { enabled: true, runs: 200 } }
+        //gas:4712388
+    },
+    ropsten: {
+      provider: function() {
+        return new HDWalletProvider(
+          mnemonic,
+          "YOUR infura URL",
+         0,3
+        );
+      },
+      network_id: 3,
+      gas: 5000000
+    }   
+  }
+}
