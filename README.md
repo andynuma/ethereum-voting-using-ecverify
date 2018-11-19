@@ -1,25 +1,7 @@
 # my-evoting
-https://scrapbox.io/evoting/
 
-## gethの起動
-1. `geth --datadir /Users/andy/eth_private_net init /User/andy/eth_private_net/myGenesis.json`  
-
-1. `geth --networkid "10" --nodiscover --datadir /Users/andy/eth_private_net --rpc --rpcaddr "localhost" --rpcport "8545" --rpccorsdomain "*" --rpcapi "eth,net,web3,personal" --targetgaslimit "20000000" console 2>> /Users/andy/eth_private_net/error.log`  
-
-1. `personal.newAccount("password")`で新しいアカウントを作成.  
-1. `eth.accounts`でアカウントを確認  
-1. `personal.unlockAccount(eth.accounts[0])`でロックを解除  
-
-`eth.accounts[0]`:運営   
-`eth.accounts[2]`:投票者  
-`eth.accounts[3]`:監査者  
-
-ポート8545でremixと接続 
-
-## truffleの設定
-`truffle(develop)> web3.sha3("hashするid")` 例えば`web3.sha3("1")`  
-`truffle(develop)> web3.eth.sign("運営or監査者のアドレス",hash)`  
-
+Contract's address on ropsten : [0x348c1c35e34c57eda965ffd91c05c65f10630697](https://ropsten.etherscan.io/address/0x348c1c35e34c57eda965ffd91c05c65f10630697)
+公開鍵はテスト簡略化のために脆弱なRSA暗号としているので注意
 
 ## 動作説明
 
@@ -55,6 +37,7 @@ https://scrapbox.io/evoting/
 - 公開鍵の送信
   - 集計フェーズのために運営は投票者のアドレスに自身の秘密鍵に対応する公開鍵を送っておく
   - それで暗号化した投票を最後に運営側に送る.
+  - テスト簡略化のため非常に脆弱なRSA暗号にしているので注意
   
 - 集計フェーズ
   - 構造体VoteをvoteIdを用いて全ての要素について検証する.
@@ -66,6 +49,18 @@ https://scrapbox.io/evoting/
   - condidateVoteCountsをインクリメントして集計
   - 投票内容は,getVote（候補者id）で見える．
     
-    
-10/19:test was done    
+  
+10/19:テスト終了
+## ropstenでのコスト一覧
+- 初回デプロイ
+ 	- 0.00133198 Ether　0.284円
+- funciton実行コスト
+ 	- setVoterAddr :0.00006376 Ether 0.014円
+  - createVote:0.000167937 Ether　0.036円
+  - sign by organizer :0.000113883 Ether　0.024円
+  - set inspectorAddr : 0.000043876 Ether 0.009円
+  - sign by inspector :　0.000080417 Ether 0.017円
+  - send to organizer :0.000058312 Ether　0.012円
+  - voteToCandidate : 0.000023716 Ether 0.005円
+
     
