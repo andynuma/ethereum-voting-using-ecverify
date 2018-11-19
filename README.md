@@ -51,7 +51,7 @@
     
   
 10/19:テスト終了
-## ropstenでのコスト一覧
+## ropsten test netでのテストコスト一覧
 - 初回デプロイ
  	- 0.00133198 Ether　0.284円
 - funciton実行コスト
