@@ -24,7 +24,7 @@
   "dependencies": {
     "ganache-cli": "^6.1.8",
     "install": "^0.12.1",
-    "next": "^6.1.1",
+    "next": "^7.0.2",
     "react": "^16.4.2",
     "react-dom": "^16.4.2",
     "sol-trace": "github:nakajo2011/sol-trace#pre_release",
